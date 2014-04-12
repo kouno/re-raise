@@ -6,6 +6,14 @@ describe ReRaise do
       ReRaise.enable
     end
 
+    it 'can be re-enabled safely' do
+      pending
+    end
+
+    it 'overwrites backtick (`command`)' do
+      pending
+    end
+
     context 'when the program returns false' do
       it 'raises an exception' do
         expect { system('false') }.to raise_error
