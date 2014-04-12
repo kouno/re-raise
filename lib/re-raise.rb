@@ -1,5 +1,12 @@
 class ReRaise
-  class FalseReturned < StandardError; end
+  class SystemExitError < StandardError
+    attr_reader :exitstatus
+
+    def initialize(exitstatus, *args)
+      super(*args)
+      @exitstatus = exitstatus
+    end
+  end
 
   def self.enable
     Kernel.class_eval do
@@ -7,7 +14,7 @@ class ReRaise
         result = system_old(*args)
 
         unless result
-          raise FalseReturned
+          raise SystemExitError, $?.exitstatus, "Sytem error returned code #{args.first}"
         end
       end
 
