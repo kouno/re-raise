@@ -47,9 +47,5 @@ describe ReRaise do
     it 'can be re-enabled safely' do
       pending
     end
-
-    it 'overwrites backtick (`command`)' do
-      pending
-    end
   end
 end
