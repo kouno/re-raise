@@ -1,4 +1,6 @@
-class ReRaise
+require 're-raise/re-raisable'
+
+module ReRaise
   class SystemExitError < StandardError
     attr_reader :exitstatus
 
@@ -8,23 +10,23 @@ class ReRaise
     end
   end
 
+  def self.raise_if_wrong_exit_code
+    unless $?.exitstatus == 0
+      raise SystemExitError, $?.exitstatus, "System error returned code (#{$?.exitstatus})"
+    end
+  end
+
   def self.enable
     Kernel.class_eval do
       def system_with_raise(*args)
         system_old(*args).tap do
-          raise_if_wrong_exit_code
+          ReRaise.raise_if_wrong_exit_code
         end
       end
 
       def backtick_with_raise(*args)
         old_backtick(*args).tap do
-          raise_if_wrong_exit_code
-        end
-      end
-
-      def raise_if_wrong_exit_code
-        unless $?.exitstatus == 0
-          raise SystemExitError, $?.exitstatus, "System error returned code (#{$?.exitstatus})"
+          ReRaise.raise_if_wrong_exit_code
         end
       end
 
